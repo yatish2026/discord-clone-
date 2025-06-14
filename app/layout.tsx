@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import{ClerkProvider}from '@clerk/nextjs'
 
 // Rename to distinguish each font use
 const openSans = Open_Sans({
@@ -24,6 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body
         className={`${openSans.variable} ${openSansMono.variable} antialiased`}
@@ -31,5 +33,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </ClerkProvider>
   );
 }
