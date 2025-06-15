@@ -24,6 +24,7 @@ model Profile {
   updated DateTime @updatedAt
   servers Server[]
   members Member[]
+  channles Chanell[]
 }
 
 
@@ -36,6 +37,7 @@ model Server {
   profileId  String
   profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   members    Member[] // Added opposite relation field
+  channles Chanell[] //added 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([profileId])
@@ -67,4 +69,22 @@ model Member{
 }
 
 
+enum ChanellType{
+  TEXT
+  AUDIO
+  VIDEO
+}
 
+model Chanell {
+
+  id String @id @default(uuid())
+  name String
+  type ChanellType @default(TEXT)
+  profileId String
+  profile Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  severId String
+  server Server  @relation(fields: [severId], references: [id], onDelete: Cascade)
+
+  
+}
