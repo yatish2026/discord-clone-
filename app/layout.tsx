@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
-import{ClerkProvider}from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { cn } from "@/lib/utils";
 
-// Rename to distinguish each font use
+// Load fonts
 const openSans = Open_Sans({
   variable: "--font-open-sans",
   subsets: ["latin"],
@@ -26,13 +28,25 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${openSans.variable} ${openSansMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "bg-white text-black dark:bg-[#2e2f30] dark:text-white", // ✅ softer dark background
+            openSans.variable,
+            openSansMono.variable,
+            "antialiased"
+          )}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            storageKey="discord-theme"
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
