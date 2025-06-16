@@ -1,12 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  
 }
 
 datasource db {
@@ -16,75 +13,78 @@ datasource db {
 
 model Profile {
   id        String   @id @default(uuid())
-  userId String @unique
+  userId    String   @unique
   name      String
-  imageUrl String @db.Text
-  email     String @db.Text
-  createdAt DateTime @default(now())
-  updated DateTime @updatedAt
-  servers Server[]
-  members Member[]
-  channles Chanell[]
-}
-
-
-model Server {
-  id         String   @id @default(uuid())
-  name       String
-  imageUrl   String   @db.Text
-  inviteCode String   @db.Text
-
-  profileId  String
-  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  members    Member[] // Added opposite relation field
-  channles Chanell[] //added 
+  imageUrl  String   @db.Text
+  email     String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  servers  Server[]
+  members  Member[]
+  channels Channel[]
+}
+
+model Server {
+  id         String @id @default(uuid())
+  name       String
+  imageUrl   String @db.Text
+  inviteCode String @db.Text
+
+  profileId String
+  profile   Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  members   Member[]
+  channels  Channel[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([profileId])
 }
 
-
-enum MemberRole{
-  ADMIN 
-  MODERATOR 
+enum MemberRole {
+  ADMIN
+  MODERATOR
   GUEST
 }
 
-model Member{
-  id String @id @default(ulid())
-
+model Member {
+  id   String     @id @default(ulid())
   role MemberRole @default(GUEST)
 
   profileId String
-  profile Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
   serverId String
-  server Server @relation (fields: [serverId],references: [id],onDelete:Cascade)
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
   @@index([serverId])
-
 }
 
-
-enum ChanellType{
+enum ChannelType {
   TEXT
   AUDIO
   VIDEO
 }
 
-model Chanell {
-
-  id String @id @default(uuid())
+model Channel {
+  id   String      @id @default(uuid())
   name String
-  type ChanellType @default(TEXT)
+  type ChannelType @default(TEXT)
+
   profileId String
-  profile Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  severId String
-  server Server  @relation(fields: [severId], references: [id], onDelete: Cascade)
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
 }
